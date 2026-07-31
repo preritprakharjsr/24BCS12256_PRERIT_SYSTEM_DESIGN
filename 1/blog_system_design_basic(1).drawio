@@ -1,0 +1,103 @@
+<mxfile host="app.diagrams.net" agent="ChatGPT">
+  <diagram id="blog-system-design" name="Blog App System Design">
+    <mxGraphModel dx="3903" dy="1737" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="users" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=14;" value="Users / Mobile / Web" vertex="1">
+          <mxGeometry height="60" width="220" x="650" y="80" as="geometry" />
+        </mxCell>
+        <mxCell id="dns" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=14;" value="DNS" vertex="1">
+          <mxGeometry height="50" width="90" x="715" y="180" as="geometry" />
+        </mxCell>
+        <mxCell id="cdn" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=14;" value="CDN / Static Cache" vertex="1">
+          <mxGeometry height="60" width="280" x="620" y="270" as="geometry" />
+        </mxCell>
+        <mxCell id="lb" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=14;" value="Load Balancer" vertex="1">
+          <mxGeometry height="70" width="320" x="600" y="370" as="geometry" />
+        </mxCell>
+        <mxCell id="app1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=13;" value="App Server 1" vertex="1">
+          <mxGeometry height="70" width="170" x="260" y="520" as="geometry" />
+        </mxCell>
+        <mxCell id="dprdZ4O9uscNdidquKze-2" edge="1" parent="1" source="app2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="app1" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="app2" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=13;" value="App Server 2" vertex="1">
+          <mxGeometry height="70" width="170" x="520" y="520" as="geometry" />
+        </mxCell>
+        <mxCell id="app3" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=13;" value="App Server 3" vertex="1">
+          <mxGeometry height="70" width="170" x="780" y="520" as="geometry" />
+        </mxCell>
+        <mxCell id="app4" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=13;" value="App Server 4" vertex="1">
+          <mxGeometry height="70" width="170" x="1040" y="520" as="geometry" />
+        </mxCell>
+        <mxCell id="redis" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f4cccc;strokeColor=#cc0000;fontSize=13;" value="Redis Cache&#xa;Hot blogs, sessions, counters" vertex="1">
+          <mxGeometry height="90" width="240" x="1080" y="660" as="geometry" />
+        </mxCell>
+        <mxCell id="db" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#cfe2f3;strokeColor=#6c8ebf;fontSize=13;" value="PostgreSQL / MySQL&#xa;Users, blogs, comments" vertex="1">
+          <mxGeometry height="90" width="260" x="620" y="660" as="geometry" />
+        </mxCell>
+        <mxCell id="calc" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=13;align=left;spacingLeft=10;" value="Traffic Calculation&#xa;&#xa;1,000,000 requests / day&#xa;≈ 11.6 requests / second&#xa;Assume 20 RPS peak&#xa;&#xa;4 app servers&#xa;≈ 5 RPS per server&#xa;&#xa;Read : Write = 90 : 10&#xa;Reads ≈ 18 RPS&#xa;Writes ≈ 2 RPS" vertex="1">
+          <mxGeometry height="230" width="250" x="40" y="120" as="geometry" />
+        </mxCell>
+        <mxCell id="flow" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e8f5e9;strokeColor=#82b366;fontSize=13;align=left;spacingLeft=10;" value="Request Flow&#xa;&#xa;GET /blogs&#xa;→ CDN&#xa;→ Load Balancer&#xa;→ App Server&#xa;→ Redis&#xa;→ Database (if cache miss)&#xa;&#xa;POST /blogs&#xa;→ Load Balancer&#xa;→ App Server&#xa;→ Database&#xa;→ Update Redis" vertex="1">
+          <mxGeometry height="260" width="250" x="-20" y="380" as="geometry" />
+        </mxCell>
+        <mxCell id="api" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f3e5f5;strokeColor=#9673a6;fontSize=13;align=left;spacingLeft=10;" value="Main APIs&#xa;&#xa;GET /blogs&#xa;GET /blogs/{id}&#xa;POST /blogs&#xa;PUT /blogs/{id}&#xa;DELETE /blogs/{id}&#xa;POST /blogs/{id}/comments&#xa;POST /login&#xa;POST /register" vertex="1">
+          <mxGeometry height="240" width="250" x="40" y="690" as="geometry" />
+        </mxCell>
+        <mxCell id="schema" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e3f2fd;strokeColor=#6c8ebf;fontSize=13;align=left;spacingLeft=10;" value="Database Schema&#xa;&#xa;users&#xa;- id (PK)&#xa;- name&#xa;- email (UNIQUE)&#xa;- password_hash&#xa;- created_at&#xa;&#xa;blogs&#xa;- id (PK)&#xa;- user_id (FK users.id)&#xa;- title&#xa;- content&#xa;- published&#xa;- created_at&#xa;- updated_at&#xa;&#xa;comments&#xa;- id (PK)&#xa;- blog_id (FK blogs.id)&#xa;- user_id (FK users.id)&#xa;- content&#xa;- created_at" vertex="1">
+          <mxGeometry height="390" width="190" x="1250" as="geometry" />
+        </mxCell>
+        <mxCell id="cache" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffebee;strokeColor=#cc0000;fontSize=13;align=left;spacingLeft=10;" value="Cache Example&#xa;&#xa;Key: blog:42&#xa;Value: {title, content, author}&#xa;TTL: 5 minutes&#xa;&#xa;Key: blogs:homepage&#xa;TTL: 1 minute" vertex="1">
+          <mxGeometry height="180" width="240" x="1420" y="580" as="geometry" />
+        </mxCell>
+        <mxCell id="e1" edge="1" parent="1" source="users" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=block;" target="dns">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e2" edge="1" parent="1" source="dns" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=block;" target="cdn">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e3" edge="1" parent="1" source="cdn" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=block;" target="lb">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="lb1" edge="1" parent="1" source="lb" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=block;" target="app1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="lb2" edge="1" parent="1" source="lb" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=block;" target="app2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="lb3" edge="1" parent="1" source="lb" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=block;" target="app3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="lb4" edge="1" parent="1" source="lb" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=block;" target="app4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="a1db" edge="1" parent="1" source="app1" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=block;" target="db">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="a2db" edge="1" parent="1" source="app2" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=block;" target="db">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="a3db" edge="1" parent="1" source="app3" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=block;" target="db">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="a4db" edge="1" parent="1" source="app4" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=block;" target="db">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="a1r" edge="1" parent="1" source="app1" style="edgeStyle=orthogonalEdgeStyle;html=1;dashed=1;endArrow=block;" target="redis">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="a2r" edge="1" parent="1" source="app2" style="edgeStyle=orthogonalEdgeStyle;html=1;dashed=1;endArrow=block;" target="redis">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="a3r" edge="1" parent="1" source="app3" style="edgeStyle=orthogonalEdgeStyle;html=1;dashed=1;endArrow=block;" target="redis">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="a4r" edge="1" parent="1" source="app4" style="edgeStyle=orthogonalEdgeStyle;html=1;dashed=1;endArrow=block;" target="redis">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
